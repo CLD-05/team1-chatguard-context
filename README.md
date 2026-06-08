@@ -29,10 +29,7 @@ team1 / **chatguard** 프로젝트의 **본부(허브) 레포**입니다.
 ├── team1-chatguard-config
 └── team1-chatguard-infra
 
-# 2) 공용 스킬을 Claude Code가 읽는 위치에 설치 (최초 1회)
-cp -r ~/chatguard/team1-chatguard-context/skills/* ~/.claude/skills/
-
-# 3) 작업할 레포에서 Claude Code 실행 + 본부 문서 함께 보기
+# 2) 작업할 레포에서 Claude Code 실행 + 본부 문서 함께 보기
 cd ~/chatguard/team1-chatguard-infra
 claude
 /add-dir ../team1-chatguard-context
