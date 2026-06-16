@@ -49,8 +49,10 @@
 ## 2. 이름·태그 규칙
 
 - 태그 케이스 **PascalCase**. 표준 세트 `Team=team1 / Environment / Project=chatguard / Owner` → `default_tags`로 자동 부착.
-- **리소스 이름 prefix = `team1-{env}-`** (예: `team1-dev-chat`, `team1-prod-mysql`).
+- **리소스 이름 prefix = `team1-{env}-`** (예: `team1-dev-api-server`, `team1-prod-mysql`).
   - ⚠️ 서비스 슬러그 `chatguard`는 **리포 이름에만** 쓴다. 리소스 이름·prefix에는 넣지 않는다.
+- **컴포넌트 이름은 역할 기반으로 확정 (D36)** — Chat Server `team1-{env}-api-server` · Worker `team1-{env}-ai-worker` · Frontend `team1-{env}-frontend`.
+  - app `deploy.yml` · config `images` · infra ECR **3곳이 글자 단위로 일치**해야 함(불일치 시 통합 깨짐).
 - **이름이 유일해야 하는 것**(EKS Cluster, Node Group, ECR, RDS, ElastiCache, S3) → 이름에 `team1-{env}-` 강제.
 - **ID로 식별되는 것**(VPC, Subnet, NAT, IGW, SG, Bastion) → `Name` 태그 + `Team=team1` 태그.
 - team 값 하나가 모든 걸 파생: VPC `10.1.0.0/16`, prefix `team1-`, 태그 `Team=team1`, state 버킷 `tfstate-lionkdt5-team1`
