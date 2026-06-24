@@ -90,7 +90,11 @@
 1. Terraform이 ALB를 직접 만들고 Ingress도 작성 → ALB 중복 생성
 2. Terraform Route53 + ExternalDNS 동시 → 서로 덮어씀
 3. Terraform Deployment + ArgoCD Application 동시 → 무한 충돌
-   > destroy(삭제) 전에는 반드시 `kubectl delete ingress`를 먼저 한다.
+   **destroy 안전 절차 (D49 — orphan LB 사고 예방):**
+
+- destroy 전 **k8s 워크로드 선회수**: `kubectl delete ingress --all -A` + **LoadBalancer 타입 Service 삭제**(ingress만으론 NLB가 안 잡힘) → `aws elbv2 describe-load-balancers`가 빈 것 확인 후 `terraform destroy`.
+- **안전망**: LBC가 만드는 LB에 팀 태그 자동 부착(config의 Service 어노테이션 `aws-load-balancer-additional-resource-tags: "Team=team1,..."`) — orphan으로 남아도 `Team` 태그가 있어 삭제 정책에 안 막힘. (`default_tags`는 Terraform 생성물만 적용 → LBC 런타임 생성물엔 미적용이 사고 원인.)
+- 18:00 마감 임박 시 destroy 미착수(EKS/VPC 삭제 10~20분, 중단 시 state 꼬임·orphan).
 
 ---
 
